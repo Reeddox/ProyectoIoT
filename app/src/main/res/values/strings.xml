@@ -1,0 +1,19 @@
+<resources>
+    <!--Login-->
+    <string name="app_name">ContraseniaProyecto</string>
+    <string name="inicioContrasenia">Contraseñas</string>
+    <string name="Usuario">Usuario</string>
+    <string name="Contrasenia">Contraseña</string>
+    <string name="Registrate">¿No te has registrado? Regístrate!!"</string>
+    <string name="btnIngresar">Ingresar</string>
+
+    <!--Registro-->
+    <string name="Nombre">Nombre</string>
+    <string name="Apellido">Apellido</string>
+    <string name="Email">Email</string>
+    <string name="ConfirmarContrasenia">Confirmar Contraseña</string>
+    <string name="PIN">Ingrese su PIN</string>
+    <string name="Condiciones">He leído y acepto los Términos y Condiciones</string>
+    <string name="btnRegistrar">Registrar</string>
+    <string name="IniciarSesion">¿Ya tienes una cuenta? Ingresa!</string>
+</resources>

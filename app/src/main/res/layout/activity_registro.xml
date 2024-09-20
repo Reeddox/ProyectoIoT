@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:background="#E0E0E0"/>
+
+    <EditText
+        android:id="@+id/editTextNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/editar_texto"
+        android:hint="@string/Nombre"
+        android:inputType="textPersonName"
+        android:padding="12dp" />
+
+    <EditText
+        android:id="@+id/editTextApellido"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/editar_texto"
+        android:hint="@string/Apellido"
+        android:inputType="textPersonName"
+        android:padding="12dp" />
+
+    <EditText
+        android:id="@+id/Usuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/editar_texto"
+        android:hint="@string/Usuario"
+        android:inputType="text"
+        android:padding="12dp" />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/editar_texto"
+        android:hint="@string/Email"
+        android:inputType="textEmailAddress"
+        android:padding="12dp" />
+
+    <EditText
+        android:id="@+id/editTextContrasena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/editar_texto"
+        android:hint="@string/Contrasenia"
+        android:inputType="textPassword"
+        android:padding="12dp" />
+
+    <EditText
+        android:id="@+id/editTextConfirmarContrasena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/editar_texto"
+        android:hint="@string/ConfirmarContrasenia"
+        android:inputType="textPassword"
+        android:padding="12dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/editar_texto"
+        android:hint="@string/PIN"
+        android:inputType="textPassword"
+        android:padding="12dp" />
+
+    <CheckBox
+        android:id="@+id/checkBoxTerminos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/Condiciones"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/buttonRegistrate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorLoginButton"
+        android:padding="12dp"
+        android:text="@string/btnRegistrar"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/textViewLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="@string/IniciarSesion"
+        android:textColor="#2196F3"
+        android:onClick="IrLogin"/>
+
+</LinearLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:hint="@string/inicioContrasenia"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/Usuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/Usuario"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/Contrasenia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/Contrasenia"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/textViewRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/Registrate"
+        android:textColor="@color/colorLoginText"
+        android:onClick="IrRegistro"/>
+
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="328dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorLoginButton"
+        android:onClick="login"
+        android:text="@string/btnIngresar"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>
