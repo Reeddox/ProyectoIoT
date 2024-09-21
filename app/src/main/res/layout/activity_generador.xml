@@ -1,68 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainGenerador"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Contraseña generada"
-        android:inputType="textNoSuggestions"
-        android:padding="12dp"
-        android:background="#EEEEEE"
-        android:layout_marginBottom="16dp"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="43dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+            app:layout_constraintBottom_toTopOf="@+id/passwordEditText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.051"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="@+id/imageView3"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/menublanco" />
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="312dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="#EEEEEE"
+            android:hint="@string/contraseniaGenerada"
+            android:inputType="textNoSuggestions"
+            android:padding="12dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/lengthTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.511"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <SeekBar
             android:id="@+id/lengthSeekBar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="307dp"
+            android:layout_height="21dp"
+            android:layout_marginTop="8dp"
             android:max="20"
-            android:progress="8" />
+            android:progress="8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.153"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/lengthTextView" />
 
         <TextView
             android:id="@+id/lengthTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="8"
+            android:layout_marginTop="208dp"
             android:background="#EEEEEE"
-            android:padding="4dp"
+            android:gravity="center"
             android:minWidth="30dp"
-            android:gravity="center"/>
-    </LinearLayout>
+            android:padding="4dp"
+            android:text="8"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.905"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <CheckBox
-        android:id="@+id/numbersCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Añadir números" />
+        <CheckBox
+            android:id="@+id/numbersCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/numeros"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.067"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lengthSeekBar" />
 
-    <CheckBox
-        android:id="@+id/specialCharsCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Añadir caracteres especiales" />
+        <CheckBox
+            android:id="@+id/specialCharsCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/eCaracteres"
+            app:layout_constraintStart_toStartOf="@+id/numbersCheckBox"
+            app:layout_constraintTop_toBottomOf="@+id/numbersCheckBox" />
 
-    <CheckBox
-        android:id="@+id/upperCaseCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Añadir mayúsculas" />
+        <CheckBox
+            android:id="@+id/upperCaseCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/mayusculas"
+            app:layout_constraintStart_toStartOf="@+id/specialCharsCheckBox"
+            app:layout_constraintTop_toBottomOf="@+id/specialCharsCheckBox" />
 
-    <Button
-        android:id="@+id/generateButton"
+        <Button
+            android:id="@+id/generateButton"
+            android:layout_width="341dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="#2196F3"
+            android:text="@string/generar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.488"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/upperCaseCheckBox" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="43dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.956"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.069"
+            app:srcCompat="@drawable/a_adirblanco" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/menuGenerador"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#2196F3"
-        android:text="Generar" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/header"
+        app:menu="@menu/menu" />
 
-</LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

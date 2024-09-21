@@ -38,4 +38,11 @@
     <string name="Ayuda">Ayuda</string>
     <string name="CerrarSesion">Cerrar Sesion</string>
 
+    <!--Generador-->
+    <string name="eCaracteres">Añadir caracteres especiales</string>
+    <string name="mayusculas">Mayúsculas</string>
+    <string name="numeros">Añadir números</string>
+    <string name="generar">Generar</string>
+    <string name="contraseniaGenerada">Contraseña Generada</string>
+
 </resources>

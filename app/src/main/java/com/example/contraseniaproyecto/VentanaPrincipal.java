@@ -76,12 +76,16 @@ public class VentanaPrincipal extends AppCompatActivity {
                 // Recuperar la opción del menú
                 // Recuperar la opción del menú
                 int id = item.getItemId();
-                if (id == R.id.nav_item6) {
+                if (id ==R.id.nav_item2){
+                    Intent intentGenerador = new Intent(VentanaPrincipal.this, Generador.class);
+                    startActivity(intentGenerador);
+                } else if (id == R.id.nav_item6) {
                     // Acción para la opción 1
                     Intent intentLogout = new Intent(VentanaPrincipal.this, MainActivity.class);
                     startActivity(intentLogout);
                     finish();
                 }
+
                 // Añade más condiciones según tus opciones
 
                 drawerLayout.closeDrawers(); // Cierra el menú después de seleccionar

@@ -35,6 +35,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.147" />
 
+        <!--Boton Añadir-->
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="43dp"
@@ -46,7 +47,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.069"
             app:srcCompat="@drawable/a_adirblanco" />
-
+        <!--Boton Menu-->
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="43dp"
