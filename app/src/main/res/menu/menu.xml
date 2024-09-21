@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@drawable/llave"
+        android:title="@string/Contrasenias" />
+    <item
+        android:icon="@drawable/candado"
+        android:title="@string/Generador" />
+    <item
+        android:icon="@drawable/historial"
+        android:title="@string/Historial" />
+    <item
+        android:icon="@drawable/configuracion"
+        android:title="@string/Configuracion" />
+    <item
+        android:icon="@drawable/ayuda"
+        android:title="@string/Ayuda" />
+    <item
+        android:id="@+id/nav_item6"
+        android:icon="@drawable/salirsesion"
+        android:title="@string/CerrarSesion" />
+</menu>

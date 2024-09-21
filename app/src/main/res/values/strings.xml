@@ -16,4 +16,26 @@
     <string name="Condiciones">He leído y acepto los Términos y Condiciones</string>
     <string name="btnRegistrar">Registrar</string>
     <string name="IniciarSesion">¿Ya tienes una cuenta? Ingresa!</string>
+
+    <!--Barra de Busqueda-->
+    <string name="Buscar">Buscar</string>
+
+    <!--Filtros-->
+    <string-array name="filtro_opciones">
+        <item>Filtros</item>
+        <item>Personal</item>
+        <item>Ejecutivo</item>
+        <item>Otros</item>
+    </string-array>
+
+    <string name="Filtros">Filtros</string>
+
+    <!--Menu-->
+    <string name="Contrasenias">Contraseñas</string>
+    <string name="Generador">Generador</string>
+    <string name="Historial">Historial</string>
+    <string name="Configuracion">Configuracion</string>
+    <string name="Ayuda">Ayuda</string>
+    <string name="CerrarSesion">Cerrar Sesion</string>
+
 </resources>

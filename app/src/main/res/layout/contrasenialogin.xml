@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:hint="@string/Usuario"
-        android:inputType="text" />
+        android:inputType="text"/>
 
     <EditText
         android:id="@+id/Contrasenia"
@@ -37,9 +37,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
+        android:onClick="IrRegistro"
         android:text="@string/Registrate"
-        android:textColor="@color/colorLoginText"
-        android:onClick="IrRegistro"/>
+        android:textColor="@color/colorLoginText" />
 
     <Button
         android:id="@+id/buttonLogin"
