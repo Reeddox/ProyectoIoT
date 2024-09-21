@@ -106,5 +106,17 @@ public class VentanaPrincipal extends AppCompatActivity {
                 }
             }
         });
+
+        // Encuentra la imagen del botón "+" y establece el listener para redirigir a AniadirContrasenia
+        ImageView imageViewAdd = findViewById(R.id.imageView3); // Cambia el ID si es necesario
+        imageViewAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Redirige a la actividad AniadirContrasenia
+                Intent intentAniadirContrasenia = new Intent(VentanaPrincipal.this, AniadirContrasenia.class);
+                startActivity(intentAniadirContrasenia);
+            }
+        });
+
     }
 }
