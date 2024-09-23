@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         EditText Campo2 = this.findViewById(R.id.Contrasenia);
         String Contrasenia = Campo2.getText().toString();
 
-        if (Usuario.equals("c1") && Contrasenia.equals("123")){
+        if (Usuario.equals("admin") && Contrasenia.equals("admin")){
             Intent i = new Intent(this, VentanaPrincipal.class);
             startActivity(i);
         }else{

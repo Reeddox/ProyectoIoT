@@ -1,13 +1,17 @@
 package com.example.contraseniaproyecto;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -80,13 +84,13 @@ public class VentanaPrincipal extends AppCompatActivity {
                     Intent intentGenerador = new Intent(VentanaPrincipal.this, Generador.class);
                     startActivity(intentGenerador);
                 } else if (id == R.id.nav_item6) {
-                    // Acción para la opción 1
+                    // Acción para la opción 6
                     Intent intentLogout = new Intent(VentanaPrincipal.this, MainActivity.class);
                     startActivity(intentLogout);
                     finish();
                 }
 
-                // Añade más condiciones según tus opciones
+                // Añadir más condiciones
 
                 drawerLayout.closeDrawers(); // Cierra el menú después de seleccionar
                 return true;
@@ -118,5 +122,59 @@ public class VentanaPrincipal extends AppCompatActivity {
             }
         });
 
+        mostrarContrasenias();
+    }
+    private void mostrarContrasenias(){
+        LinearLayout layout = findViewById(R.id.contraseniaContainer); // El container donde se muestran las contraseñas
+        layout.removeAllViews(); // Limpia el layout para evitar duplicados
+
+        // Recorre cada contraseña almacenada en la lista
+        for (AlmacenamientoContrasenia.Contrasenia contrasenia : AlmacenamientoContrasenia.contrasenias){
+
+            // Infla (crea) la vista del item_contrasenia desde el archivo XML, pero no la agrega todavia al layout
+            View itemView = getLayoutInflater().inflate(R.layout.item_contrasenia, layout, false);
+
+            // Encuentra los TextView y el ImageView en el layout inflado por sus ID
+            TextView textViewNombre = itemView.findViewById(R.id.textViewNombreContrasenia);
+            TextView textViewContrasenia = itemView.findViewById(R.id.textViewContrasenia);
+            ImageView imageViewEye = itemView.findViewById(R.id.imageViewEye);
+
+            // Establece el nombre de la contraseña en el TextView correspondiente
+            textViewNombre.setText(contrasenia.NombreContrasenia);
+
+            // Establece la contraseña en el TextView correspondiente
+            textViewContrasenia.setText(contrasenia.nContrasenia);
+
+            // Oculta la contraseña inicialmente usando un metodo de transformacion
+            textViewContrasenia.setTransformationMethod(PasswordTransformationMethod.getInstance()); // Oculta la contraseña inicialmente
+
+            // Inicializa un array de un solo elemento para controlar si la contraseña es visible o no
+            final boolean[] passwordVisible = {false};
+
+            // Configure un listener para el ImageView que representa el icono de mostrar/ocultar contraseña
+            imageViewEye.setOnClickListener(v -> {
+
+                // Cambia el estado de visibilidad de la contraseña
+                passwordVisible[0] = !passwordVisible[0];
+
+                // Si la contraseña es visible, se muestra la contraseña y cambia el icono a "eye"
+                if (passwordVisible[0]) {
+                    textViewContrasenia.setTransformationMethod(null); // Muestra la contraseña
+                    imageViewEye.setImageResource(R.drawable.eye);
+                } else {
+                // Si la contraseña no es visible, se oculta la contraseña y cambia el icono a "eyeoff"
+                    textViewContrasenia.setTransformationMethod(PasswordTransformationMethod.getInstance()); // Oculta la contraseña
+                    imageViewEye.setImageResource(R.drawable.eyeoff);
+                }
+            });
+            // Agrega el item view (la vista inflada con los datos de la contraseña) al layout
+            layout.addView(itemView);
+
+        }
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mostrarContrasenias();
     }
 }

@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -20,6 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 public class AniadirContrasenia extends AppCompatActivity {
 
     private DrawerLayout drawerLayout; // Declaración del DrawerLayout
+    private EditText nombre, contrasenia, confirmarContrasenia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,5 +89,36 @@ public class AniadirContrasenia extends AppCompatActivity {
                 startActivity(intentAniadirContrasenia);
             }
         });
+        // Inicializar los campos
+        nombre = findViewById(R.id.etNombre);
+        contrasenia = findViewById(R.id.etContrasena);
+        confirmarContrasenia = findViewById(R.id.etConfirmarContrasena);
+
+        // Boton de guardar
+        findViewById(R.id.btnGuardar).setOnClickListener(v -> {
+            guardarContrasenia();
+        });
+
+    }
+    private void guardarContrasenia(){
+        String nombreText = nombre.getText().toString();
+        String contraseniaText = contrasenia.getText().toString();
+        String cContraseniaText = confirmarContrasenia.getText().toString();
+
+        if (nombreText.isEmpty() || contraseniaText.isEmpty() || cContraseniaText.isEmpty()){
+            Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!contraseniaText.equals(cContraseniaText)){
+            Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Se agregan los datos
+        AlmacenamientoContrasenia.contrasenias.add(new AlmacenamientoContrasenia.Contrasenia(nombreText, contraseniaText));
+
+        Toast.makeText(this, "Contraseña Guardada", Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

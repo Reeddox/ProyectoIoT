@@ -99,7 +99,7 @@
             app:layout_constraintTop_toBottomOf="@+id/specialCharsCheckBox" />
 
         <Button
-            android:id="@+id/generateButton"
+            android:id="@+id/btnGuardar"
             android:layout_width="341dp"
             android:layout_height="53dp"
             android:layout_marginTop="32dp"

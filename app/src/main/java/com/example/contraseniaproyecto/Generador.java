@@ -48,7 +48,7 @@ public class Generador extends AppCompatActivity {
         numbersCheckBox = findViewById(R.id.numbersCheckBox);
         specialCharsCheckBox = findViewById(R.id.specialCharsCheckBox);
         upperCaseCheckBox = findViewById(R.id.upperCaseCheckBox);
-        generateButton = findViewById(R.id.generateButton);
+        generateButton = findViewById(R.id.btnGuardar);
 
         // Configurar SeekBar
         lengthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
