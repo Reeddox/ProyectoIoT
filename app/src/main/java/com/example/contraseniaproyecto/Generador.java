@@ -116,27 +116,47 @@ public class Generador extends AppCompatActivity {
     }
 
     private void generatePassword() {
+
+        // Obtiene el valor de la lonmgitud seleccionada en el Seekbar
         int length = lengthSeekBar.getProgress();
+
+        // Verifica si los Checkboxs estan marcados ya sea el de números, caracteres especiales y letras mayúsculas
         boolean useNumbers = numbersCheckBox.isChecked();
         boolean useSpecialChars = specialCharsCheckBox.isChecked();
         boolean useUpperCase = upperCaseCheckBox.isChecked();
 
-        String lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
-        String uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        String numberChars = "0123456789";
-        String specialChars = "!@#$%^&*()_-+=<>?";
+        // Cadenas de caracteres disponibles para la generacion de la contraseña
+        String lowercaseChars = "abcdefghijklmnopqrstuvwxyz"; // Letras minusculas
+        String uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // Letras mayusculas
+        String numberChars = "0123456789"; // Números
+        String specialChars = "!@#$%^&*()_-+=<>?"; // Caracteres especiales
 
+        // Inicializa la lista de caracteres válidos con las letras minúsculas
         StringBuilder validChars = new StringBuilder(lowercaseChars);
+
+        // Si el checkbox de números esta marcado, se agregan los numeros a la contraseña generada
         if (useNumbers) validChars.append(numberChars);
+
+        // Si el checkbox de caracteres especiales esta marcado, se agregan los esos caracteres a la contraseña generada
         if (useSpecialChars) validChars.append(specialChars);
+
+        // Si el checkbox de letras mayúsculas esta marcado, se agregan las letras mayúsculas a la contraseña generada
         if (useUpperCase) validChars.append(uppercaseChars);
 
+        // Crea un objeto Random para seleccionar caracteres al azar
         Random random = new Random();
+
+        // StringBuilder para almacenar la contraseña generada
         StringBuilder password = new StringBuilder(length);
+
+        // Genera la contraseña caracter por caracter de manera aleatoria
         for (int i = 0; i < length; i++) {
+
+            // Añade un caracter aleatorio de los caracteres validos
             password.append(validChars.charAt(random.nextInt(validChars.length())));
         }
 
+        // Establece la contraseña generada en el EditText para mostrarla al usuario
         passwordEditText.setText(password.toString());
     }
 }
