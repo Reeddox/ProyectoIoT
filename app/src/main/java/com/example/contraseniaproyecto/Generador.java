@@ -27,6 +27,7 @@ public class Generador extends AppCompatActivity {
     private TextView lengthTextView;
     private CheckBox numbersCheckBox, specialCharsCheckBox, upperCaseCheckBox;
     private Button generateButton;
+    private Button savePasswordButton;
     private DrawerLayout drawerLayout;
 
     @Override
@@ -49,6 +50,8 @@ public class Generador extends AppCompatActivity {
         specialCharsCheckBox = findViewById(R.id.specialCharsCheckBox);
         upperCaseCheckBox = findViewById(R.id.upperCaseCheckBox);
         generateButton = findViewById(R.id.btnGuardar);
+        savePasswordButton = findViewById(R.id.btnSavePassword);
+        savePasswordButton.setVisibility(View.GONE); // Inicialmente oculto
 
         // Configurar SeekBar
         lengthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -65,7 +68,18 @@ public class Generador extends AppCompatActivity {
         });
 
         // Configurar botón de generación
-        generateButton.setOnClickListener(v -> generatePassword());
+        generateButton.setOnClickListener(v -> {
+            generatePassword();
+            savePasswordButton.setVisibility(View.VISIBLE); // Mostrar el botón después de generar
+        });
+
+        // Configurar el nuevo botón para guardar contraseña
+        savePasswordButton.setOnClickListener(v -> {
+            String generatedPassword = passwordEditText.getText().toString();
+            Intent intent = new Intent(Generador.this, AniadirContrasenia.class);
+            intent.putExtra("CONTRASENIA_GENERADA", generatedPassword);
+            startActivity(intent);
+        });
 
         // Inicializar y configurar el menú lateral
         drawerLayout = findViewById(R.id.mainGenerador);
@@ -77,7 +91,6 @@ public class Generador extends AppCompatActivity {
                 if (id == R.id.nav_item1) {
                     Intent intentPrincipal = new Intent(Generador.this, VentanaPrincipal.class);
                     startActivity(intentPrincipal);
-
                 } else if (id == R.id.nav_item6) {
                     Intent intentLogout = new Intent(Generador.this, MainActivity.class);
                     startActivity(intentLogout);
@@ -116,7 +129,6 @@ public class Generador extends AppCompatActivity {
     }
 
     private void generatePassword() {
-
         // Obtiene el valor de la lonmgitud seleccionada en el Seekbar
         int length = lengthSeekBar.getProgress();
 
@@ -151,12 +163,14 @@ public class Generador extends AppCompatActivity {
 
         // Genera la contraseña caracter por caracter de manera aleatoria
         for (int i = 0; i < length; i++) {
-
             // Añade un caracter aleatorio de los caracteres validos
             password.append(validChars.charAt(random.nextInt(validChars.length())));
         }
 
         // Establece la contraseña generada en el EditText para mostrarla al usuario
         passwordEditText.setText(password.toString());
+
+        // Mostrar el botón de guardar después de generar la contraseña
+        savePasswordButton.setVisibility(View.VISIBLE);
     }
 }

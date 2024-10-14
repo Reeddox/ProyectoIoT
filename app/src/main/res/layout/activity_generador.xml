@@ -110,6 +110,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/upperCaseCheckBox" />
 
+        <Button
+            android:id="@+id/btnSavePassword"
+            android:layout_width="341dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#4CAF50"
+            android:text="@string/Guardar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnGuardar" />
+
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="43dp"

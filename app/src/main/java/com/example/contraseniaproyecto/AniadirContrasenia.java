@@ -22,8 +22,10 @@ import com.google.android.material.navigation.NavigationView;
 
 public class AniadirContrasenia extends AppCompatActivity {
 
-    private DrawerLayout drawerLayout; // Declaración del DrawerLayout
+    private DrawerLayout drawerLayout;
     private EditText nombre, contrasenia, confirmarContrasenia;
+    private boolean esModificacion = false;
+    private String nombreOriginal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +33,12 @@ public class AniadirContrasenia extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_aniadir_contrasenia);
 
-        // Manejo de los insets para una mejor experiencia de pantalla completa
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainGuardar), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Inicializar y configurar el menú lateral (Navigation Drawer)
         drawerLayout = findViewById(R.id.mainGuardar);
         NavigationView menu = findViewById(R.id.menuGuardar);
 
@@ -49,24 +49,19 @@ public class AniadirContrasenia extends AppCompatActivity {
                 if (id == R.id.nav_item1) {
                     Intent intentPrincipal = new Intent(AniadirContrasenia.this, VentanaPrincipal.class);
                     startActivity(intentPrincipal);
-
                 } else if (id == R.id.nav_item2) {
                     Intent intentGenerador = new Intent(AniadirContrasenia.this, Generador.class);
                     startActivity(intentGenerador);
-
                 } else if (id == R.id.nav_item6) {
                     Intent intentLogout = new Intent(AniadirContrasenia.this, MainActivity.class);
                     startActivity(intentLogout);
                     finish();
                 }
-                // Añade más condiciones según tus opciones
-
-                drawerLayout.closeDrawers(); // Cierra el menú después de seleccionar
+                drawerLayout.closeDrawers();
                 return true;
             }
         });
 
-        // Configurar el icono del menú para abrir el drawer
         ImageView imageViewMenu = findViewById(R.id.imageView2);
         imageViewMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,44 +74,66 @@ public class AniadirContrasenia extends AppCompatActivity {
             }
         });
 
-        // Encuentra la imagen del botón "+" y establece el listener para redirigir a AniadirContrasenia
-        ImageView imageViewAdd = findViewById(R.id.imageView3); // Cambia el ID si es necesario
+        ImageView imageViewAdd = findViewById(R.id.imageView3);
         imageViewAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirige a la actividad AniadirContrasenia
                 Intent intentAniadirContrasenia = new Intent(AniadirContrasenia.this, VentanaPrincipal.class);
                 startActivity(intentAniadirContrasenia);
             }
         });
-        // Inicializar los campos
+
         nombre = findViewById(R.id.etNombre);
         contrasenia = findViewById(R.id.etContrasena);
         confirmarContrasenia = findViewById(R.id.etConfirmarContrasena);
 
-        // Boton de guardar
-        findViewById(R.id.btnGuardar).setOnClickListener(v -> {
-            guardarContrasenia();
-        });
+        // Verificar si se recibió una contraseña generada
+        String contraseniaGenerada = getIntent().getStringExtra("CONTRASENIA_GENERADA");
+        if (contraseniaGenerada != null && !contraseniaGenerada.isEmpty()) {
+            contrasenia.setText(contraseniaGenerada);
+            confirmarContrasenia.setText(contraseniaGenerada);
+        }
 
+        esModificacion = getIntent().getBooleanExtra("MODIFICAR", false);
+        if (esModificacion) {
+            nombreOriginal = getIntent().getStringExtra("NOMBRE");
+            String contraseniaOriginal = getIntent().getStringExtra("CONTRASENIA");
+            nombre.setText(nombreOriginal);
+            contrasenia.setText(contraseniaOriginal);
+            confirmarContrasenia.setText(contraseniaOriginal);
+        }
+
+        findViewById(R.id.btnGuardar).setOnClickListener(v -> guardarContrasenia());
     }
-    private void guardarContrasenia(){
+
+    private void guardarContrasenia() {
         String nombreText = nombre.getText().toString();
         String contraseniaText = contrasenia.getText().toString();
         String cContraseniaText = confirmarContrasenia.getText().toString();
 
-        if (nombreText.isEmpty() || contraseniaText.isEmpty() || cContraseniaText.isEmpty()){
+        if (nombreText.isEmpty() || contraseniaText.isEmpty() || cContraseniaText.isEmpty()) {
             Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!contraseniaText.equals(cContraseniaText)){
+        if (!contraseniaText.equals(cContraseniaText)) {
             Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Se agregan los datos
-        AlmacenamientoContrasenia.contrasenias.add(new AlmacenamientoContrasenia.Contrasenia(nombreText, contraseniaText));
+        if (esModificacion) {
+            for (AlmacenamientoContrasenia.Contrasenia c : AlmacenamientoContrasenia.contrasenias) {
+                if (c.NombreContrasenia.equals(nombreOriginal)) {
+                    c.NombreContrasenia = nombreText;
+                    c.nContrasenia = contraseniaText;
+                    break;
+                }
+            }
+            setResult(RESULT_OK, new Intent().putExtra("ACCION", "Se modificó la contraseña de " + nombreOriginal));
+        } else {
+            AlmacenamientoContrasenia.contrasenias.add(new AlmacenamientoContrasenia.Contrasenia(nombreText, contraseniaText));
+            setResult(RESULT_OK, new Intent().putExtra("ACCION", "Se añadió la contraseña de " + nombreText));
+        }
 
         Toast.makeText(this, "Contraseña Guardada", Toast.LENGTH_SHORT).show();
         finish();
