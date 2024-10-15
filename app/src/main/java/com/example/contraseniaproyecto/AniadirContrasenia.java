@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -19,13 +18,20 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AniadirContrasenia extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private EditText nombre, contrasenia, confirmarContrasenia;
     private boolean esModificacion = false;
-    private String nombreOriginal;
+    private String contraseniaId;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +39,21 @@ public class AniadirContrasenia extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_aniadir_contrasenia);
 
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        drawerLayout = findViewById(R.id.mainGuardar);
+        nombre = findViewById(R.id.etNombre);
+        contrasenia = findViewById(R.id.etContrasena);
+        confirmarContrasenia = findViewById(R.id.etConfirmarContrasena);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainGuardar), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        drawerLayout = findViewById(R.id.mainGuardar);
         NavigationView menu = findViewById(R.id.menuGuardar);
-
         menu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -53,6 +65,7 @@ public class AniadirContrasenia extends AppCompatActivity {
                     Intent intentGenerador = new Intent(AniadirContrasenia.this, Generador.class);
                     startActivity(intentGenerador);
                 } else if (id == R.id.nav_item6) {
+                    mAuth.signOut();
                     Intent intentLogout = new Intent(AniadirContrasenia.this, MainActivity.class);
                     startActivity(intentLogout);
                     finish();
@@ -83,10 +96,6 @@ public class AniadirContrasenia extends AppCompatActivity {
             }
         });
 
-        nombre = findViewById(R.id.etNombre);
-        contrasenia = findViewById(R.id.etContrasena);
-        confirmarContrasenia = findViewById(R.id.etConfirmarContrasena);
-
         // Verificar si se recibió una contraseña generada
         String contraseniaGenerada = getIntent().getStringExtra("CONTRASENIA_GENERADA");
         if (contraseniaGenerada != null && !contraseniaGenerada.isEmpty()) {
@@ -96,7 +105,8 @@ public class AniadirContrasenia extends AppCompatActivity {
 
         esModificacion = getIntent().getBooleanExtra("MODIFICAR", false);
         if (esModificacion) {
-            nombreOriginal = getIntent().getStringExtra("NOMBRE");
+            contraseniaId = getIntent().getStringExtra("ID");
+            String nombreOriginal = getIntent().getStringExtra("NOMBRE");
             String contraseniaOriginal = getIntent().getStringExtra("CONTRASENIA");
             nombre.setText(nombreOriginal);
             contrasenia.setText(contraseniaOriginal);
@@ -121,21 +131,27 @@ public class AniadirContrasenia extends AppCompatActivity {
             return;
         }
 
-        if (esModificacion) {
-            for (AlmacenamientoContrasenia.Contrasenia c : AlmacenamientoContrasenia.contrasenias) {
-                if (c.NombreContrasenia.equals(nombreOriginal)) {
-                    c.NombreContrasenia = nombreText;
-                    c.nContrasenia = contraseniaText;
-                    break;
-                }
-            }
-            setResult(RESULT_OK, new Intent().putExtra("ACCION", "Se modificó la contraseña de " + nombreOriginal));
-        } else {
-            AlmacenamientoContrasenia.contrasenias.add(new AlmacenamientoContrasenia.Contrasenia(nombreText, contraseniaText));
-            setResult(RESULT_OK, new Intent().putExtra("ACCION", "Se añadió la contraseña de " + nombreText));
-        }
+        String userId = mAuth.getCurrentUser().getUid();
+        Map<String, Object> password = new HashMap<>();
+        password.put("nombre", nombreText);
+        password.put("contrasenia", contraseniaText);
 
-        Toast.makeText(this, "Contraseña Guardada", Toast.LENGTH_SHORT).show();
-        finish();
+        if (esModificacion) {
+            db.collection("ContraseñasUsuarios").document(userId).collection("ContraseñasGuardadas").document(contraseniaId)
+                    .set(password)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(AniadirContrasenia.this, "Contraseña modificada", Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(AniadirContrasenia.this, "Error al modificar contraseña", Toast.LENGTH_SHORT).show());
+        } else {
+            db.collection("ContraseñasUsuarios").document(userId).collection("ContraseñasGuardadas")
+                    .add(password)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(AniadirContrasenia.this, "Contraseña guardada", Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(AniadirContrasenia.this, "Error al guardar contraseña", Toast.LENGTH_SHORT).show());
+        }
     }
 }

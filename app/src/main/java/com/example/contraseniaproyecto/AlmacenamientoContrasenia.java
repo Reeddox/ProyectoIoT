@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AlmacenamientoContrasenia {
-    // Lista para almacenar los nombres y contraseñas
-    public static List<AlmacenamientoContrasenia.Contrasenia> contrasenias = new ArrayList<>();
-
     // Clase para representar una contraseña
-    public static class Contrasenia{
+    public static class Contrasenia {
+        public String id; // ID del documento en Firestore
         public String NombreContrasenia;
         public String nContrasenia;
 
-        public Contrasenia(String NombreContrasenia, String nContrasenia){
+        public Contrasenia() {
+            // Constructor vacío necesario para Firestore
+        }
+
+        public Contrasenia(String id, String NombreContrasenia, String nContrasenia) {
+            this.id = id;
             this.NombreContrasenia = NombreContrasenia;
             this.nContrasenia = nContrasenia;
         }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "254969219376",
+    "project_id": "proyectocontrasenia-8c6bf",
+    "storage_bucket": "proyectocontrasenia-8c6bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254969219376:android:f42c86782f23d1c6d320f5",
+        "android_client_info": {
+          "package_name": "com.example.contraseniaproyecto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFbiG2194IMn0lRscnNNb5hxcr_MVzUkU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
