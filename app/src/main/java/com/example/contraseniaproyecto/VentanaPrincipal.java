@@ -222,6 +222,12 @@ public class VentanaPrincipal extends AppCompatActivity {
     }
 
     private void modificarContrasenia(AlmacenamientoContrasenia.Contrasenia contrasenia) {
+
+        HIstorial.registrarEvento(
+                "Se modificó la contraseña de " + contrasenia.NombreContrasenia,
+                "modificación"
+        );
+
         Intent intentModificar = new Intent(VentanaPrincipal.this, AniadirContrasenia.class);
         intentModificar.putExtra("MODIFICAR", true);
         intentModificar.putExtra("ID", contrasenia.id);
@@ -238,6 +244,11 @@ public class VentanaPrincipal extends AppCompatActivity {
                     contrasenias.remove(contrasenia);
                     mostrarContrasenias();
                     Toast.makeText(VentanaPrincipal.this, "Contraseña eliminada", Toast.LENGTH_SHORT).show();
+
+                    HIstorial.registrarEvento(
+                            "Se eliminó la contraseña de " + contrasenia.NombreContrasenia,
+                            "eliminación"
+                    );
                 })
                 .addOnFailureListener(e -> Toast.makeText(VentanaPrincipal.this, "Error al eliminar contraseña", Toast.LENGTH_SHORT).show());
     }
