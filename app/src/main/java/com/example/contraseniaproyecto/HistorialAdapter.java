@@ -34,19 +34,15 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
     public void onBindViewHolder(@NonNull HistorialViewHolder holder, int position) {
         HistorialItem item = historialList.get(position);
 
-        // Formatear el campo `timestamp` a una fecha legible
         if (item.getTimestamp() != null) {
-            // Usa SimpleDateFormat para formatear el Timestamp a una fecha y hora legible
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
             String fechaFormateada = sdf.format(item.getTimestamp().toDate());
             holder.tvFecha.setText(fechaFormateada);
         } else {
-            holder.tvFecha.setText("Sin fecha"); // En caso de que no haya timestamp, para evitar crashes
+            holder.tvFecha.setText("Sin fecha");
         }
 
         holder.tvDescripcion.setText(item.getDescripcion());
-
-        // Configurar el click listener para mostrar detalles en un diálogo
         holder.itemView.setOnClickListener(v -> mostrarDetalles(item));
     }
 
@@ -54,15 +50,16 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Detalles del registro");
 
-        // Crear el mensaje con los detalles
+        // Corregido: Comparación directa con el string "modificacion"
+        String tipoAccion = "modificacion".equals(item.getTipo()) ? "Modificación" : "Eliminación";
+
         String mensaje = String.format("Acción: %s\n\nDetalle: %s",
-                item.getTipo().equals("modificacion") ? "Modificación" : "Eliminación",
+                tipoAccion,
                 item.getDescripcion());
 
         builder.setMessage(mensaje);
         builder.setPositiveButton("Cerrar", (dialog, which) -> dialog.dismiss());
 
-        // Mostrar el diálogo
         AlertDialog dialog = builder.create();
         dialog.show();
     }

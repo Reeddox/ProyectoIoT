@@ -222,10 +222,9 @@ public class VentanaPrincipal extends AppCompatActivity {
     }
 
     private void modificarContrasenia(AlmacenamientoContrasenia.Contrasenia contrasenia) {
-
-        HIstorial.registrarEvento(
-                "Se modificó la contraseña de " + contrasenia.NombreContrasenia,
-                "modificación"
+        // Registrar el evento usando el nuevo método de conveniencia
+        HIstorial.registrarModificacion(
+                "Se modificó la contraseña de " + contrasenia.NombreContrasenia
         );
 
         Intent intentModificar = new Intent(VentanaPrincipal.this, AniadirContrasenia.class);
@@ -238,19 +237,24 @@ public class VentanaPrincipal extends AppCompatActivity {
 
     private void eliminarContrasenia(AlmacenamientoContrasenia.Contrasenia contrasenia) {
         String userId = mAuth.getCurrentUser().getUid();
-        db.collection("ContraseñasUsuarios").document(userId).collection("ContraseñasGuardadas").document(contrasenia.id)
+        db.collection("ContraseñasUsuarios")
+                .document(userId)
+                .collection("ContraseñasGuardadas")
+                .document(contrasenia.id)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     contrasenias.remove(contrasenia);
                     mostrarContrasenias();
                     Toast.makeText(VentanaPrincipal.this, "Contraseña eliminada", Toast.LENGTH_SHORT).show();
 
-                    HIstorial.registrarEvento(
-                            "Se eliminó la contraseña de " + contrasenia.NombreContrasenia,
-                            "eliminación"
+                    // Registrar el evento usando el nuevo método de conveniencia
+                    HIstorial.registrarEliminacion(
+                            "Se eliminó la contraseña de " + contrasenia.NombreContrasenia
                     );
                 })
-                .addOnFailureListener(e -> Toast.makeText(VentanaPrincipal.this, "Error al eliminar contraseña", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e ->
+                        Toast.makeText(VentanaPrincipal.this, "Error al eliminar contraseña", Toast.LENGTH_SHORT).show()
+                );
     }
 
     @Override

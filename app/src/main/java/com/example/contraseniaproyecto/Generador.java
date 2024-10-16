@@ -91,6 +91,11 @@ public class Generador extends AppCompatActivity {
                 if (id == R.id.nav_item1) {
                     Intent intentPrincipal = new Intent(Generador.this, VentanaPrincipal.class);
                     startActivity(intentPrincipal);
+                } else if (id == R.id.nav_item2) {
+                    drawerLayout.closeDrawers();
+                } else if (id == R.id.nav_item3) {
+                    Intent intentHistorial = new Intent(Generador.this, HIstorial.class);
+                    startActivity(intentHistorial);
                 } else if (id == R.id.nav_item6) {
                     Intent intentLogout = new Intent(Generador.this, MainActivity.class);
                     startActivity(intentLogout);

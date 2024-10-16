@@ -13,9 +13,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HIstorial extends AppCompatActivity {
+    private static final String TAG = "Historial";
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private FirebaseAuth mAuth;
+
+    // Constantes para los tipos de eventos
+    public static final String TIPO_MODIFICACION = "modificacion";
+    public static final String TIPO_ELIMINACION = "eliminacion";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,15 +76,70 @@ public class HIstorial extends AppCompatActivity {
         }
     }
 
-    // Método para registrar un nuevo evento en el historial
+    // Método principal para registrar eventos
     public static void registrarEvento(String descripcion, String tipo) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Crear un nuevo documento en la colección "historial"
-        HistorialItem item = new HistorialItem(descripcion, tipo, Timestamp.now()); // Añadir la marca temporal
+        // Normalizar el tipo
+        String tipoNormalizado;
+        if (tipo != null) {
+            tipo = tipo.trim().toLowerCase();
+            if (tipo.equals(TIPO_MODIFICACION) ||
+                    tipo.equals("modificación")) {
+                tipoNormalizado = TIPO_MODIFICACION;
+            } else {
+                tipoNormalizado = TIPO_ELIMINACION;
+            }
+        } else {
+            tipoNormalizado = TIPO_ELIMINACION;
+        }
+
+        // Logs para depuración
+        Log.d(TAG, "Registrando evento:");
+        Log.d(TAG, "Descripción: " + descripcion);
+        Log.d(TAG, "Tipo original: " + tipo);
+        Log.d(TAG, "Tipo normalizado: " + tipoNormalizado);
+
+        // Crear el item del historial
+        HistorialItem item = new HistorialItem(descripcion, tipoNormalizado, Timestamp.now());
+
+        // Verificar que el tipo se guardó correctamente
+        Log.d(TAG, "Tipo final en el item: " + item.getTipo());
+
+        // Guardar en Firestore
         db.collection("historial")
                 .add(item)
-                .addOnSuccessListener(documentReference -> Log.d("Firestore", "Evento registrado con ID: " + documentReference.getId()))
-                .addOnFailureListener(e -> Log.w("Firestore", "Error al registrar el evento", e));
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Evento registrado con ID: " + documentReference.getId());
+
+                    // Verificar el documento guardado
+                    documentReference.get().addOnSuccessListener(documentSnapshot -> {
+                        HistorialItem itemGuardado = documentSnapshot.toObject(HistorialItem.class);
+                        if (itemGuardado != null) {
+                            Log.d(TAG, "Verificación del documento guardado:");
+                            Log.d(TAG, "Tipo guardado: " + itemGuardado.getTipo());
+                            Log.d(TAG, "Descripción guardada: " + itemGuardado.getDescripcion());
+                        }
+                    });
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error al registrar el evento", e));
+    }
+
+    // Métodos de conveniencia para registrar eventos específicos
+    public static void registrarModificacion(String descripcion) {
+        registrarEvento(descripcion, TIPO_MODIFICACION);
+    }
+
+    public static void registrarEliminacion(String descripcion) {
+        registrarEvento(descripcion, TIPO_ELIMINACION);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
