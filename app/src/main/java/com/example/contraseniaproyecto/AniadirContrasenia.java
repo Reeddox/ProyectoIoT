@@ -2,6 +2,7 @@ package com.example.contraseniaproyecto;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ public class AniadirContrasenia extends AppCompatActivity {
     private String contraseniaId;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private ImageView togglePassword, toggleConfirmPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,12 @@ public class AniadirContrasenia extends AppCompatActivity {
         nombre = findViewById(R.id.etNombre);
         contrasenia = findViewById(R.id.etContrasena);
         confirmarContrasenia = findViewById(R.id.etConfirmarContrasena);
+        togglePassword = findViewById(R.id.ivShowPassword);
+        toggleConfirmPassword = findViewById(R.id.ivShowPassword2);
+
+        // Configurar los listeners para mostrar/ocultar contraseña
+        togglePassword.setOnClickListener(v -> verContrasenia(contrasenia, togglePassword));
+        toggleConfirmPassword.setOnClickListener(v -> verContrasenia(confirmarContrasenia, toggleConfirmPassword));
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainGuardar), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -114,6 +122,19 @@ public class AniadirContrasenia extends AppCompatActivity {
         }
 
         findViewById(R.id.btnGuardar).setOnClickListener(v -> guardarContrasenia());
+    }
+
+    private void verContrasenia(EditText editText, ImageView toggleIcon) {
+        if (editText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+            // Cambiar a modo oculto
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            toggleIcon.setImageResource(R.drawable.eye);
+        } else {
+            // Cambiar a modo visible
+            editText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            toggleIcon.setImageResource(R.drawable.eyeoff);
+        }
+        editText.setSelection(editText.getText().length());
     }
 
     private void guardarContrasenia() {

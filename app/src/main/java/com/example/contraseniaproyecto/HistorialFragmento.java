@@ -8,6 +8,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -37,7 +39,9 @@ public class HistorialFragmento extends Fragment {
     }
 
     private void cargarHistorial() {
-        db.collection("historial")
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        db.collection("historial").document(userId).collection("historialGuardado")
                 .orderBy("timestamp", Query.Direction.DESCENDING) // Ordenar por la marca temporal
                 .get()
                 .addOnCompleteListener(task -> {

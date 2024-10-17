@@ -18,7 +18,6 @@ public class HIstorial extends AppCompatActivity {
     private NavigationView navigationView;
     private FirebaseAuth mAuth;
 
-    // Constantes para los tipos de eventos
     public static final String TIPO_MODIFICACION = "modificacion";
     public static final String TIPO_ELIMINACION = "eliminacion";
 
@@ -79,35 +78,24 @@ public class HIstorial extends AppCompatActivity {
     // Método principal para registrar eventos
     public static void registrarEvento(String descripcion, String tipo) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String userId = mAuth.getCurrentUser().getUid();
 
         // Normalizar el tipo
-        String tipoNormalizado;
-        if (tipo != null) {
-            tipo = tipo.trim().toLowerCase();
-            if (tipo.equals(TIPO_MODIFICACION) ||
-                    tipo.equals("modificación")) {
-                tipoNormalizado = TIPO_MODIFICACION;
-            } else {
-                tipoNormalizado = TIPO_ELIMINACION;
-            }
-        } else {
-            tipoNormalizado = TIPO_ELIMINACION;
-        }
+        String tipoNormalizado = normalizarTipo(tipo);
 
         // Logs para depuración
-        Log.d(TAG, "Registrando evento:");
+        Log.d(TAG, "Registrando evento para el usuario: " + userId);
         Log.d(TAG, "Descripción: " + descripcion);
-        Log.d(TAG, "Tipo original: " + tipo);
         Log.d(TAG, "Tipo normalizado: " + tipoNormalizado);
 
         // Crear el item del historial
         HistorialItem item = new HistorialItem(descripcion, tipoNormalizado, Timestamp.now());
 
-        // Verificar que el tipo se guardó correctamente
-        Log.d(TAG, "Tipo final en el item: " + item.getTipo());
-
         // Guardar en Firestore
         db.collection("historial")
+                .document(userId)
+                .collection("historialGuardado")
                 .add(item)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Evento registrado con ID: " + documentReference.getId());
@@ -123,6 +111,16 @@ public class HIstorial extends AppCompatActivity {
                     });
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Error al registrar el evento", e));
+    }
+
+    private static String normalizarTipo(String tipo) {
+        if (tipo != null) {
+            tipo = tipo.trim().toLowerCase();
+            if (tipo.equals(TIPO_MODIFICACION) || tipo.equals("modificación")) {
+                return TIPO_MODIFICACION;
+            }
+        }
+        return TIPO_ELIMINACION;
     }
 
     // Métodos de conveniencia para registrar eventos específicos
