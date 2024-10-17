@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -126,7 +127,7 @@ public class Registro extends AppCompatActivity {
     private void subirImagenYGuardarDatos(final String userId, final String nombre, final String apellido,
                                           final String usuario, final String email, final String pin) {
         if (imagenUri != null) {
-            StorageReference fileReference = storageRef.child(userId + "." + getFileExtension(imagenUri));
+            final StorageReference fileReference = storageRef.child(userId + "." + getFileExtension(imagenUri));
             fileReference.putFile(imagenUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -140,9 +141,12 @@ public class Registro extends AppCompatActivity {
                             });
                         }
                     })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(Registro.this, "Error al subir la imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        guardarDatosUsuario(userId, nombre, apellido, usuario, email, pin, null);
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(Registro.this, "Error al subir la imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            guardarDatosUsuario(userId, nombre, apellido, usuario, email, pin, null);
+                        }
                     });
         } else {
             guardarDatosUsuario(userId, nombre, apellido, usuario, email, pin, null);
@@ -163,17 +167,19 @@ public class Registro extends AppCompatActivity {
 
         db.collection("usuarios").document(userId)
                 .set(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(Registro.this, "Registro exitoso.", Toast.LENGTH_SHORT).show();
-                            Intent vueltaLogin = new Intent(Registro.this, MainActivity.class);
-                            startActivity(vueltaLogin);
-                            finish();
-                        } else {
-                            Toast.makeText(Registro.this, "Error al guardar los datos.", Toast.LENGTH_SHORT).show();
-                        }
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(Registro.this, "Registro exitoso.", Toast.LENGTH_SHORT).show();
+                        Intent vueltaLogin = new Intent(Registro.this, MainActivity.class);
+                        startActivity(vueltaLogin);
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Registro.this, "Error al guardar los datos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

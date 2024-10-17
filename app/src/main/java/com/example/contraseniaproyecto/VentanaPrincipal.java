@@ -2,6 +2,8 @@ package com.example.contraseniaproyecto;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +40,7 @@ public class VentanaPrincipal extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private final List<AlmacenamientoContrasenia.Contrasenia> contrasenias = new ArrayList<>();
+    private EditText searchEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,50 +53,37 @@ public class VentanaPrincipal extends AppCompatActivity {
 
         drawerLayout = findViewById(R.id.main);
 
-        Spinner spinner = findViewById(R.id.spinner_filter);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.filtro_opciones, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                // Implementar lógica de filtrado aquí
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        setupNavigationMenu();
+        setupImageViewListeners();
+        setupSearchFunctionality();
+        cargarContrasenias();
+    }
+
+    private void setupNavigationMenu() {
         NavigationView menu = findViewById(R.id.menu);
         menu.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_item2) {
-                Intent intentGenerador = new Intent(VentanaPrincipal.this, Generador.class);
-                startActivity(intentGenerador);
+                startActivity(new Intent(VentanaPrincipal.this, Generador.class));
             } else if (id == R.id.nav_item3) {
-                Intent intentHistorial = new Intent(VentanaPrincipal.this, HIstorial.class);
-                startActivity(intentHistorial);
+                startActivity(new Intent(VentanaPrincipal.this, HIstorial.class));
             } else if (id == R.id.nav_item6) {
                 mAuth.signOut();
-                Intent intentLogout = new Intent(VentanaPrincipal.this, MainActivity.class);
-                startActivity(intentLogout);
+                startActivity(new Intent(VentanaPrincipal.this, MainActivity.class));
                 finish();
             }
-
             drawerLayout.closeDrawers();
             return true;
         });
+    }
 
+    private void setupImageViewListeners() {
         ImageView imageViewMenu = findViewById(R.id.imageView2);
         imageViewMenu.setOnClickListener(v -> {
             if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -105,11 +95,24 @@ public class VentanaPrincipal extends AppCompatActivity {
 
         ImageView imageViewAdd = findViewById(R.id.imageView3);
         imageViewAdd.setOnClickListener(v -> {
-            Intent intentAniadirContrasenia = new Intent(VentanaPrincipal.this, AniadirContrasenia.class);
-            startActivity(intentAniadirContrasenia);
+            startActivity(new Intent(VentanaPrincipal.this, AniadirContrasenia.class));
         });
+    }
 
-        cargarContrasenias();
+    private void setupSearchFunctionality() {
+        searchEditText = findViewById(R.id.textView);
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filtrarContrasenias(s.toString());
+            }
+        });
     }
 
     private void cargarContrasenias() {
@@ -125,18 +128,28 @@ public class VentanaPrincipal extends AppCompatActivity {
                             String contrasenia = document.getString("contrasenia");
                             contrasenias.add(new AlmacenamientoContrasenia.Contrasenia(id, nombre, contrasenia));
                         }
-                        mostrarContrasenias();
+                        mostrarContrasenias(contrasenias);
                     } else {
                         Toast.makeText(VentanaPrincipal.this, "Error al cargar contraseñas", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void mostrarContrasenias() {
+    private void filtrarContrasenias(String query) {
+        List<AlmacenamientoContrasenia.Contrasenia> contraseniasFiltered = new ArrayList<>();
+        for (AlmacenamientoContrasenia.Contrasenia contrasenia : contrasenias) {
+            if (contrasenia.NombreContrasenia.toLowerCase().contains(query.toLowerCase())) {
+                contraseniasFiltered.add(contrasenia);
+            }
+        }
+        mostrarContrasenias(contraseniasFiltered);
+    }
+
+    private void mostrarContrasenias(List<AlmacenamientoContrasenia.Contrasenia> contraseniasToShow) {
         LinearLayout layout = findViewById(R.id.contraseniaContainer);
         layout.removeAllViews();
 
-        for (AlmacenamientoContrasenia.Contrasenia contrasenia : contrasenias) {
+        for (AlmacenamientoContrasenia.Contrasenia contrasenia : contraseniasToShow) {
             View itemView = getLayoutInflater().inflate(R.layout.item_contrasenia, layout, false);
 
             TextView textViewNombre = itemView.findViewById(R.id.textViewNombreContrasenia);
@@ -147,17 +160,14 @@ public class VentanaPrincipal extends AppCompatActivity {
             textViewContrasenia.setText("********");
             textViewContrasenia.setTransformationMethod(PasswordTransformationMethod.getInstance());
 
-            // Inicializamos una variable para controlar la visibilidad de la contraseña
             final boolean[] isPasswordVisible = {false};
 
             imageViewEye.setOnClickListener(v -> {
                 if (isPasswordVisible[0]) {
-                    // Si la contraseña es visible, la ocultamos
                     textViewContrasenia.setText("********");
                     textViewContrasenia.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    isPasswordVisible[0] = false;  // Actualizamos la bandera
+                    isPasswordVisible[0] = false;
                 } else {
-                    // Si la contraseña está oculta, pedimos el PIN
                     solicitarPIN(contrasenia, textViewContrasenia, isPasswordVisible);
                 }
             });
@@ -205,7 +215,7 @@ public class VentanaPrincipal extends AppCompatActivity {
     private void mostrarContrasenia(AlmacenamientoContrasenia.Contrasenia contrasenia, TextView textViewContrasenia, boolean[] isPasswordVisible) {
         textViewContrasenia.setText(contrasenia.nContrasenia);
         textViewContrasenia.setTransformationMethod(null);
-        isPasswordVisible[0] = true;  // Actualizamos la bandera para indicar que la contraseña está visible
+        isPasswordVisible[0] = true;
     }
 
     private void mostrarOpcionesContrasenia(AlmacenamientoContrasenia.Contrasenia contrasenia) {
@@ -222,7 +232,6 @@ public class VentanaPrincipal extends AppCompatActivity {
     }
 
     private void modificarContrasenia(AlmacenamientoContrasenia.Contrasenia contrasenia) {
-        // Registrar el evento usando el nuevo método de conveniencia
         HIstorial.registrarModificacion(
                 "Se modificó la contraseña de " + contrasenia.NombreContrasenia
         );
@@ -244,10 +253,9 @@ public class VentanaPrincipal extends AppCompatActivity {
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     contrasenias.remove(contrasenia);
-                    mostrarContrasenias();
+                    mostrarContrasenias(contrasenias);
                     Toast.makeText(VentanaPrincipal.this, "Contraseña eliminada", Toast.LENGTH_SHORT).show();
 
-                    // Registrar el evento usando el nuevo método de conveniencia
                     HIstorial.registrarEliminacion(
                             "Se eliminó la contraseña de " + contrasenia.NombreContrasenia
                     );
