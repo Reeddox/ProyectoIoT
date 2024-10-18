@@ -113,14 +113,14 @@ public class HIstorial extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Error al registrar el evento", e));
     }
 
-    private static String normalizarTipo(String tipo) {
-        if (tipo != null) {
-            tipo = tipo.trim().toLowerCase();
-            if (tipo.equals(TIPO_MODIFICACION) || tipo.equals("modificación")) {
-                return TIPO_MODIFICACION;
+    private static String normalizarTipo(String tipo) { // Método para normalizar el tipo
+        if (tipo != null) { // Verificar si el tipo no es nulo
+            tipo = tipo.trim().toLowerCase(); // Convertir a minúsculas y eliminar espacios en blanco
+            if (tipo.equals(TIPO_MODIFICACION) || tipo.equals("modificación")) { // Verificar si es una modificación
+                return TIPO_MODIFICACION; // Devolver el tipo de modificación
             }
         }
-        return TIPO_ELIMINACION;
+        return TIPO_ELIMINACION; // Devolver el tipo de eliminación por defecto
     }
 
     // Métodos de conveniencia para registrar eventos específicos
@@ -133,11 +133,11 @@ public class HIstorial extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
+    public void onBackPressed() { // Sobrescribir el método para manejar el botón de retroceso
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) { // Cerrar el drawer si está abierto
+            drawerLayout.closeDrawer(GravityCompat.START); // Cerrar el drawer
         } else {
-            super.onBackPressed();
+            super.onBackPressed(); // Manejar el botón de retroceso por defecto
         }
     }
 }

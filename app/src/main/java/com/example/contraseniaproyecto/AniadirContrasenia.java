@@ -27,38 +27,38 @@ import java.util.Map;
 
 public class AniadirContrasenia extends AppCompatActivity {
 
-    private DrawerLayout drawerLayout;
-    private EditText nombre, contrasenia, confirmarContrasenia;
-    private boolean esModificacion = false;
-    private String contraseniaId;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private ImageView togglePassword, toggleConfirmPassword;
+    private DrawerLayout drawerLayout; //
+    private EditText nombre, contrasenia, confirmarContrasenia; // Campos de entrada para el nombre, contraseña y confirmación de contraseña
+    private boolean esModificacion = false; // Indica si se está modificando una contraseña existente
+    private String contraseniaId; // ID de la contraseña a modificar
+    private FirebaseAuth mAuth; // Instancia de Firebase Authentication
+    private FirebaseFirestore db; // Instancia de Firebase Firestore
+    private ImageView togglePassword, toggleConfirmPassword; // Íconos para mostrar/ocultar contraseña
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_aniadir_contrasenia);
+        super.onCreate(savedInstanceState); // Llamada al método onCreate de la clase padre
+        EdgeToEdge.enable(this); // Habilitar el modo de borde para la actividad
+        setContentView(R.layout.activity_aniadir_contrasenia); // Establecer el diseño de la actividad
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance(); // Inicializar la instancia de Firebase Authentication
+        db = FirebaseFirestore.getInstance(); // Inicializar la instancia de Firebase Firestore
 
-        drawerLayout = findViewById(R.id.mainGuardar);
-        nombre = findViewById(R.id.etNombre);
-        contrasenia = findViewById(R.id.etContrasena);
-        confirmarContrasenia = findViewById(R.id.etConfirmarContrasena);
-        togglePassword = findViewById(R.id.ivShowPassword);
-        toggleConfirmPassword = findViewById(R.id.ivShowPassword2);
+        drawerLayout = findViewById(R.id.mainGuardar); // Encontrar el DrawerLayout por su ID
+        nombre = findViewById(R.id.etNombre); // Encontrar el EditText para el nombre por su ID
+        contrasenia = findViewById(R.id.etContrasena); // Encontrar el EditText para la contraseña por su ID
+        confirmarContrasenia = findViewById(R.id.etConfirmarContrasena); // Encontrar el EditText para la confirmación de contraseña por su ID
+        togglePassword = findViewById(R.id.ivShowPassword); // Encontrar el ImageView para mostrar/ocultar contraseña por su ID
+        toggleConfirmPassword = findViewById(R.id.ivShowPassword2); // Encontrar el ImageView para mostrar/ocultar confirmación de contraseña por su ID
 
         // Configurar los listeners para mostrar/ocultar contraseña
-        togglePassword.setOnClickListener(v -> verContrasenia(contrasenia, togglePassword));
-        toggleConfirmPassword.setOnClickListener(v -> verContrasenia(confirmarContrasenia, toggleConfirmPassword));
+        togglePassword.setOnClickListener(v -> verContrasenia(contrasenia, togglePassword)); // Configurar el listener para el ImageView de contraseña
+        toggleConfirmPassword.setOnClickListener(v -> verContrasenia(confirmarContrasenia, toggleConfirmPassword)); // Configurar el listener para el ImageView de confirmación de contraseña
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainGuardar), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainGuardar), (v, insets) -> { // Configurar el listener para el DrawerLayout
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars()); // Obtener los márgenes del sistema
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom); // Establecer los márgenes del DrawerLayout
+            return insets; // Devolver los insets
         });
 
         NavigationView menu = findViewById(R.id.menuGuardar);
@@ -111,21 +111,21 @@ public class AniadirContrasenia extends AppCompatActivity {
             confirmarContrasenia.setText(contraseniaGenerada);
         }
 
-        esModificacion = getIntent().getBooleanExtra("MODIFICAR", false);
-        if (esModificacion) {
-            contraseniaId = getIntent().getStringExtra("ID");
-            String nombreOriginal = getIntent().getStringExtra("NOMBRE");
-            String contraseniaOriginal = getIntent().getStringExtra("CONTRASENIA");
-            nombre.setText(nombreOriginal);
-            contrasenia.setText(contraseniaOriginal);
-            confirmarContrasenia.setText(contraseniaOriginal);
+        esModificacion = getIntent().getBooleanExtra("MODIFICAR", false); // Verificar si se está modificando una contraseña existente
+        if (esModificacion) { // Si se está modificando una contraseña existente
+            contraseniaId = getIntent().getStringExtra("ID"); // Obtener el ID de la contraseña a modificar
+            String nombreOriginal = getIntent().getStringExtra("NOMBRE"); // Obtener el nombre original de la contraseña
+            String contraseniaOriginal = getIntent().getStringExtra("CONTRASENIA"); // Obtener la contraseña original de la contraseña
+            nombre.setText(nombreOriginal); // Establecer el nombre original en el EditText
+            contrasenia.setText(contraseniaOriginal); // Establecer la contraseña original en el EditText
+            confirmarContrasenia.setText(contraseniaOriginal); // Establecer la contraseña original en el EditText de confirmación
         }
 
-        findViewById(R.id.btnGuardar).setOnClickListener(v -> guardarContrasenia());
+        findViewById(R.id.btnGuardar).setOnClickListener(v -> guardarContrasenia()); // Configurar el listener para el botón de guardar
     }
 
-    private void verContrasenia(EditText editText, ImageView toggleIcon) {
-        if (editText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+    private void verContrasenia(EditText editText, ImageView toggleIcon) { // Método para mostrar/ocultar contraseña
+        if (editText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) { // Si la contraseña está visible
             // Cambiar a modo oculto
             editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             toggleIcon.setImageResource(R.drawable.eye);
@@ -138,26 +138,26 @@ public class AniadirContrasenia extends AppCompatActivity {
     }
 
     private void guardarContrasenia() {
-        String nombreText = nombre.getText().toString();
-        String contraseniaText = contrasenia.getText().toString();
-        String cContraseniaText = confirmarContrasenia.getText().toString();
+        String nombreText = nombre.getText().toString(); // Obtener el texto del EditText para el nombre
+        String contraseniaText = contrasenia.getText().toString(); // Obtener el texto del EditText para la contraseña
+        String cContraseniaText = confirmarContrasenia.getText().toString(); // Obtener el texto del EditText para la confirmación de contraseña
 
-        if (nombreText.isEmpty() || contraseniaText.isEmpty() || cContraseniaText.isEmpty()) {
-            Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show();
+        if (nombreText.isEmpty() || contraseniaText.isEmpty() || cContraseniaText.isEmpty()) { // Verificar si se ingresaron todos los campos
+            Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show(); // Mostrar un mensaje de error
             return;
         }
 
-        if (!contraseniaText.equals(cContraseniaText)) {
-            Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+        if (!contraseniaText.equals(cContraseniaText)) { // Verificar si las contraseñas coinciden
+            Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show(); // Mostrar un mensaje de error
             return;
         }
 
-        String userId = mAuth.getCurrentUser().getUid();
+        String userId = mAuth.getCurrentUser().getUid(); // Obtener el ID del usuario actual
         Map<String, Object> password = new HashMap<>();
         password.put("nombre", nombreText);
         password.put("contrasenia", contraseniaText);
 
-        if (esModificacion) {
+        if (esModificacion) { // Si se está modificando una contraseña existente
             db.collection("ContraseñasUsuarios").document(userId).collection("ContraseñasGuardadas").document(contraseniaId)
                     .set(password)
                     .addOnSuccessListener(aVoid -> {
@@ -166,13 +166,13 @@ public class AniadirContrasenia extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> Toast.makeText(AniadirContrasenia.this, "Error al modificar contraseña", Toast.LENGTH_SHORT).show());
         } else {
-            db.collection("ContraseñasUsuarios").document(userId).collection("ContraseñasGuardadas")
-                    .add(password)
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(AniadirContrasenia.this, "Contraseña guardada", Toast.LENGTH_SHORT).show();
+            db.collection("ContraseñasUsuarios").document(userId).collection("ContraseñasGuardadas") // Guardar la contraseña en Firestore
+                    .add(password) // Agregar la contraseña a la colección de contraseñas del usuario
+                    .addOnSuccessListener(documentReference -> { // Mostrar un mensaje de éxito
+                        Toast.makeText(AniadirContrasenia.this, "Contraseña guardada", Toast.LENGTH_SHORT).show(); // Mostrar un mensaje de éxito
                         finish();
                     })
-                    .addOnFailureListener(e -> Toast.makeText(AniadirContrasenia.this, "Error al guardar contraseña", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> Toast.makeText(AniadirContrasenia.this, "Error al guardar contraseña", Toast.LENGTH_SHORT).show()); // Mostrar un mensaje de error
         }
     }
 }

@@ -30,7 +30,8 @@ import java.util.Map;
 
 public class Registro extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
+    // Declaración de variables
+    private static final int PICK_IMAGE_REQUEST = 1; // Constante para la solicitud de imagen
 
     private EditText editTextNombre, editTextApellido, editTextUsuario, editTextEmail,
             editTextContrasena, editTextConfirmarContrasena, editTextPIN;
@@ -38,6 +39,7 @@ public class Registro extends AppCompatActivity {
     private ImageView imagenPerfil;
     private Uri imagenUri;
 
+    // Referencias a Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private StorageReference storageRef;
@@ -47,10 +49,12 @@ public class Registro extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
+        // Inicializar Firebase Auth y Firestore
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference("profile_images");
 
+        // Encontrar vistas
         editTextNombre = findViewById(R.id.editTextNombre);
         editTextApellido = findViewById(R.id.editTextApellido);
         editTextUsuario = findViewById(R.id.Usuario);
@@ -69,9 +73,10 @@ public class Registro extends AppCompatActivity {
         });
     }
 
+    // Método para abrir el selector de imágenes
     private void abrirSelectorDeImagen() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI); // Intent para seleccionar imagen
+        startActivityForResult(intent, PICK_IMAGE_REQUEST); // Iniciar la actividad
     }
 
     @Override
@@ -83,7 +88,9 @@ public class Registro extends AppCompatActivity {
         }
     }
 
+    // Método para validar el registro
     public void validarRegistro(View v) {
+        // Obtener datos del formulario
         final String nombre = editTextNombre.getText().toString().trim();
         final String apellido = editTextApellido.getText().toString().trim();
         final String usuario = editTextUsuario.getText().toString().trim();
@@ -92,17 +99,18 @@ public class Registro extends AppCompatActivity {
         String confirmarContrasena = editTextConfirmarContrasena.getText().toString().trim();
         final String pin = editTextPIN.getText().toString().trim();
 
+        // Validar campos
         if (nombre.isEmpty() || apellido.isEmpty() || usuario.isEmpty() || email.isEmpty() ||
                 contrasena.isEmpty() || confirmarContrasena.isEmpty() || pin.isEmpty()) {
             Toast.makeText(this, "Por favor, complete todos los campos.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        // Validar contraseñas
         if (!contrasena.equals(confirmarContrasena)) {
             Toast.makeText(this, "Las contraseñas no coinciden.", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        // Validar si se ha aceptado los términos y condiciones
         if (!checkBoxTerminos.isChecked()) {
             Toast.makeText(this, "Debe aceptar los términos y condiciones.", Toast.LENGTH_SHORT).show();
             return;
@@ -114,7 +122,7 @@ public class Registro extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Registro exitoso, ahora subimos la imagen y guardamos los datos
+                            // Registro exitoso, ahora se sube la imagen y guardamos los datos
                             String userId = mAuth.getCurrentUser().getUid();
                             subirImagenYGuardarDatos(userId, nombre, apellido, usuario, email, pin);
                         } else {
@@ -124,6 +132,7 @@ public class Registro extends AppCompatActivity {
                 });
     }
 
+    // Método para subir la imagen y guardar los datos del usuario
     private void subirImagenYGuardarDatos(final String userId, final String nombre, final String apellido,
                                           final String usuario, final String email, final String pin) {
         if (imagenUri != null) {
@@ -153,6 +162,7 @@ public class Registro extends AppCompatActivity {
         }
     }
 
+    // Método para guardar los datos del usuario en Firestore
     private void guardarDatosUsuario(String userId, String nombre, String apellido, String usuario,
                                      String email, String pin, String imageUrl) {
         Map<String, Object> user = new HashMap<>();
@@ -165,6 +175,7 @@ public class Registro extends AppCompatActivity {
             user.put("imagenPerfil", imageUrl);
         }
 
+        // Guardar los datos en Firestore
         db.collection("usuarios").document(userId)
                 .set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -183,11 +194,11 @@ public class Registro extends AppCompatActivity {
                     }
                 });
     }
-
+    // Método para obtener la extensión del archivo
     private String getFileExtension(Uri uri) {
         return MimeTypeMap.getSingleton().getExtensionFromMimeType(getContentResolver().getType(uri));
     }
-
+    // Método para ir a la pantalla de inicio de sesión
     public void IrLogin(View v) {
         Intent vueltaLogin = new Intent(this, MainActivity.class);
         startActivity(vueltaLogin);

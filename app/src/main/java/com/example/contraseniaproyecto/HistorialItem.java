@@ -4,23 +4,24 @@ import com.google.firebase.Timestamp;
 import java.text.Normalizer;
 
 public class HistorialItem {
-    private String descripcion;
-    private String tipo;
-    private Timestamp timestamp;
+    private String descripcion; // Descripción del evento
+    private String tipo; // Tipo del evento
+    private Timestamp timestamp; // Marca de tiempo del evento
 
-    public static final String TIPO_MODIFICACION = "modificacion";
-    public static final String TIPO_ELIMINACION = "eliminacion";
+    public static final String TIPO_MODIFICACION = "modificacion"; // Constantes para los tipos de eventos
+    public static final String TIPO_ELIMINACION = "eliminacion"; // Constantes para los tipos de eventos
 
     public HistorialItem() {
         // Constructor vacío requerido para Firestore
     }
 
     public HistorialItem(String descripcion, String tipo, Timestamp timestamp) {
-        this.descripcion = descripcion;
-        setTipo(tipo);
-        this.timestamp = timestamp;
+        this.descripcion = descripcion; // Inicializar los campos
+        setTipo(tipo); // Configurar el tipo
+        this.timestamp = timestamp; // Configurar el timestamp
     }
 
+    // Métodos getter y setter para los campos
     public String getDescripcion() {
         return descripcion;
     }

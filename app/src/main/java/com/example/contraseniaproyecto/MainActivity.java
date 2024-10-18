@@ -26,12 +26,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contrasenialogin);
 
+        // Inicializar Firebase Auth y Firestore
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         editTextUsuario = findViewById(R.id.Usuario);
         editTextPassword = findViewById(R.id.Contrasenia);
     }
-
+    // Método para iniciar sesión
     public void login(View v) {
         final String usuario = editTextUsuario.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
+    // Método para ir a la pantalla de registro
     public void IrRegistro(View v) {
         Intent VueltaRegistro = new Intent(this, Registro.class);
         startActivity(VueltaRegistro);
